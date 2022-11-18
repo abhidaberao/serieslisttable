@@ -7,9 +7,22 @@ export default class FilterForm extends Component<any, any> {
       this.state = {
         year: 2012,
         rating: 2,
-        platform: 0,
-        genre: 0,
+        platform: -1,
+        genre: -1,
       };
+    }
+
+    buildOptions = (itemList : any) => {
+      
+
+      let options = itemList.map((p: any, i: any) => {
+        return <MenuItem value={i}>{p}</MenuItem>;
+      });
+
+      options.push(<MenuItem value={-1}>Any</MenuItem>);
+
+      return options;
+
     }
   
     render(): ReactNode {
@@ -25,9 +38,7 @@ export default class FilterForm extends Component<any, any> {
                   this.setState({ genre: event.target.value as string });
                 }}
               >
-                {this.props.filterRange.genres.map((g: any, i: any) => {
-                  return <MenuItem value={i}>{g}</MenuItem>;
-                })}
+                {this.buildOptions(this.props.filterRange.genres)}
               </Select>
             </FormControl>
   
@@ -40,9 +51,7 @@ export default class FilterForm extends Component<any, any> {
                   this.setState({ platform: event.target.value as string });
                 }}
               >
-                {this.props.filterRange.platforms.map((p: any, i: any) => {
-                  return <MenuItem value={i}>{p}</MenuItem>;
-                })}
+                {this.buildOptions(this.props.filterRange.platforms)}
               </Select>
             </FormControl>
   

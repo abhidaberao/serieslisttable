@@ -1,4 +1,4 @@
-import { SearchTwoTone, TuneTwoTone } from "@mui/icons-material";
+import { ReplayTwoTone, SearchTwoTone, TuneTwoTone } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -12,6 +12,13 @@ import PaginatedTable from "../../../components/PaginatedTable/PaginatedTabel";
 import axios from "../../../services/axios.instance";
 import FilterForm from "./FilterForm";
 
+const defaultFilters = {
+  genre: "Any",
+  streamingOn: "Any",
+  rating: "",
+  yearOfRelease: "",
+}
+
 class Data extends Component {
   state = {
     isFilterModalOpen: false,
@@ -24,12 +31,7 @@ class Data extends Component {
       ratings: [],
       years: [],
     },
-    filters: {
-      genre: "",
-      streamingOn: "",
-      rating: "",
-      yearOfRelease: "",
-    },
+    filters: defaultFilters,
     isNext: false,
     isPrev: false,
     totalCount: 0,
@@ -58,6 +60,10 @@ class Data extends Component {
     this.closeFilterModal();
   };
 
+  clearFilterCallback = () =>  {
+    this.setState({ filters: defaultFilters, pageNumber: 0 });
+  }
+
   setSortBy = (sort: any) => {
     this.setState({ sortBy: sort });
   };
@@ -80,10 +86,10 @@ class Data extends Component {
     if(this.state.searchQuery === ''){
       const params = {
         filter: JSON.stringify({
-          ...(this.state.filters.streamingOn !== "" && {
+          ...((this.state.filters.streamingOn !== "Any") && {
             streamingOn: this.state.filters.streamingOn,
           }),
-          ...(this.state.filters.genre !== "" && {
+          ...(this.state.filters.genre !== "Any" && {
             genre: this.state.filters.genre,
           }),
         }),
@@ -183,6 +189,9 @@ class Data extends Component {
             />
             <Button variant="outlined" onClick={this.openFilterModal}>
               <TuneTwoTone />
+            </Button>
+            <Button variant="outlined" onClick={this.clearFilterCallback}>
+              <ReplayTwoTone />
             </Button>
           </Stack>
 
