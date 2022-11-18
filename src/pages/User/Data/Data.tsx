@@ -34,6 +34,7 @@ class Data extends Component {
     isPrev: false,
     totalCount: 0,
     sortBy: {},
+    searchQuery : '',
   };
 
   closeFilterModal = () => {
@@ -76,30 +77,57 @@ class Data extends Component {
   }
 
   async getAndSetData() {
-    const params = {
-      filter: JSON.stringify({
-        ...(this.state.filters.streamingOn !== "" && {
-          streamingOn: this.state.filters.streamingOn,
+    if(this.state.searchQuery === ''){
+      const params = {
+        filter: JSON.stringify({
+          ...(this.state.filters.streamingOn !== "" && {
+            streamingOn: this.state.filters.streamingOn,
+          }),
+          ...(this.state.filters.genre !== "" && {
+            genre: this.state.filters.genre,
+          }),
         }),
-        ...(this.state.filters.genre !== "" && {
-          genre: this.state.filters.genre,
-        }),
-      }),
-      limit: this.state.limit,
-      pagenumber: this.state.pageNumber + 1,
-      sort: JSON.stringify(this.state.sortBy),
-    };
-    const response = await axios.get(`series/filtered`, { params });
+        limit: this.state.limit,
+        pagenumber: this.state.pageNumber + 1,
+        sort: JSON.stringify(this.state.sortBy),
+      };
+      const response = await axios.get(`series/filtered`, { params });
+  
+      const _filterRange = await this.getfilterRange();
+  
+      this.setState({
+        rowData: response.data.data.data,
+        filterRange: _filterRange,
+        isNext: response.data.data.next == "true" ? true : false,
+        isPrev: response.data.data.prev == "true" ? true : false,
+        totalCount: response.data.data.total,
+      });
+    }
 
-    const _filterRange = await this.getfilterRange();
+    else {
 
-    this.setState({
-      rowData: response.data.data.data,
-      filterRange: _filterRange,
-      isNext: response.data.data.next == "true" ? true : false,
-      isPrev: response.data.data.prev == "true" ? true : false,
-      totalCount: response.data.data.total,
-    });
+      // console.log("searhcing")
+
+      // const params = {
+      //   search :  this.state.searchQuery,
+      //   limit : this.state.limit,
+      //   pagenumber : this.state.pageNumber + 1
+      // }
+      // const response = await axios.get(`series/search`, { params });
+
+      // this.setState({
+      //   rowData: response.data.data.data,
+      //   isNext: response.data.data.next == "true" ? true : false,
+      //   isPrev: response.data.data.prev == "true" ? true : false,
+      //   totalCount: response.data.data.total,
+      // });
+    }
+
+
+  }
+
+  handleSearch = (query : string) => {
+    this.setState({ searchQuery: query })
   }
 
   async componentDidMount() {
@@ -114,8 +142,9 @@ class Data extends Component {
     if (
       prevState.limit !== this.state.limit ||
       prevState.pageNumber !== this.state.pageNumber ||
-      prevState.filters != this.state.filters ||
-      prevState.sortBy != this.state.sortBy
+      prevState.filters !== this.state.filters ||
+      prevState.sortBy !== this.state.sortBy ||
+      prevState.searchQuery !== this.state.searchQuery
     ) {
       this.getAndSetData();
     }
@@ -143,7 +172,7 @@ class Data extends Component {
               id="outlined-basic"
               variant="outlined"
               placeholder="Search ....."
-              onChange={(e) => this.setState({ searchQuery: e.target.value })}
+              onChange={(e) => this.handleSearch(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
