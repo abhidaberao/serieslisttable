@@ -15,8 +15,8 @@ import FilterForm from "./FilterForm";
 const defaultFilters = {
   genre: "Any",
   streamingOn: "Any",
-  rating: "",
-  yearOfRelease: "",
+  rating: -1,
+  yearOfRelease: -1,
 }
 
 class Data extends Component {
@@ -82,6 +82,10 @@ class Data extends Component {
     };
   }
 
+  timeout(ms : number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
   async getAndSetData() {
     if(this.state.searchQuery === ''){
       const params = {
@@ -111,9 +115,8 @@ class Data extends Component {
     }
 
     else {
-
+      // await this.timeout(2000)
       // console.log("searhcing")
-
       // const params = {
       //   search :  this.state.searchQuery,
       //   limit : this.state.limit,
@@ -127,6 +130,7 @@ class Data extends Component {
       //   isPrev: response.data.data.prev == "true" ? true : false,
       //   totalCount: response.data.data.total,
       // });
+
     }
 
 

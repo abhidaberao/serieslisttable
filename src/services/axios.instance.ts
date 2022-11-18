@@ -1,4 +1,5 @@
 import axios, { ParamsSerializerOptions } from "axios";
+import qs from "qs";
 
 const baseURL = "http://localhost:4000/";
 const axiosInstance = axios.create({
@@ -11,7 +12,10 @@ axiosInstance.interceptors.request.use((config) => {
     "Content-Type": "application/json",
     authorization: token || "",
   };
+  
   return config;
 });
+
+
 
 export default axiosInstance;

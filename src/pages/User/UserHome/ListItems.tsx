@@ -16,7 +16,7 @@ export const mainListItems = (
                 <ListItemIcon>
                     <AssessmentTwoTone />
                 </ListItemIcon>
-                <ListItemText primary="Reports" />
+                <ListItemText primary="Charts" />
             </ListItemButton>
         </Link>
 
@@ -25,7 +25,7 @@ export const mainListItems = (
                 <ListItemIcon>
                     <TableViewIcon />
                 </ListItemIcon>
-                <ListItemText primary="Field Workers" />
+                <ListItemText primary="Series List" />
             </ListItemButton>
         </Link>
     </>
